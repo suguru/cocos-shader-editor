@@ -65,7 +65,10 @@ $(function() {
   });
 
   var canvas = document.getElementById('gl');
-  var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+
+  var glOption = { premultipliedAlpha: false };
+
+  var gl = canvas.getContext('webgl', glOption) || canvas.getContext('experimental-webgl', glOption);
 
   var shaderProgram;
   var uniforms;
@@ -75,7 +78,7 @@ $(function() {
   var compileShader = function(source, type) {
     var shader;
     var editor;
-    // basic header
+    // basic heade
     source = [
       'precision mediump float;',
       'uniform mat4 CC_PMatrix;',
@@ -281,7 +284,7 @@ $(function() {
 
   var draw = function() {
 
-    gl.clearColor(0,0,0,1);
+    gl.clearColor(0,0,0,0);
     gl.clearDepth(1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -302,11 +305,12 @@ $(function() {
   };
 
   var time = 0;
+  var animationInterval = 1/60000;
 
   var step = function() {
     draw();
     window.requestAnimationFrame(step);
-    time += (1000 / 60);
+    time += animationInterval;
   };
 
   var init = function() {
@@ -319,6 +323,7 @@ $(function() {
     //gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     //gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
+    // loadTexture('/img/cocos2dx_portrait.png');
     loadTexture('/img/cocos2dx_logo.png');
     initShaders();
     setAttributes();
