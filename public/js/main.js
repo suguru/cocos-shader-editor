@@ -305,7 +305,7 @@ $(function() {
   };
 
   var time = 0;
-  var animationInterval = 1/60000;
+  var animationInterval = 1/60;
 
   var step = function() {
     draw();
