@@ -9,4 +9,5 @@ app.get('/', function(req, res) {
 });
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.listen(3000);
+var port = Number(process.env.PORT || 3000);
+app.listen(port);
