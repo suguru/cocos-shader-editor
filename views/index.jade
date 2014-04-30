@@ -1,0 +1,25 @@
+doctype html
+html(lang='en')
+  head
+    title Cocos Shader Editor
+    link(rel='stylesheet' type='text/css' href='/css/components.css')
+    link(rel='stylesheet' type='text/css' href='/css/main.css')
+    script(type='text/javascript' src='/js/components.js')
+    script(type='text/javascript' src='/js/main.js')
+  body
+    .pure-g
+      .pure-u-1-2
+        #vertex-area
+          h5 Vertex Shader
+          #vertex-editor
+        #fragment-area
+          h5 Fragment Shader
+          #fragment-editor
+      .pure-u-1-2
+        #gl-view
+          h5 Preview
+          #preview
+            canvas#gl(width='512' height='512')
+        #log-view
+          h5 Log
+          #logs

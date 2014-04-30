@@ -1,0 +1,36 @@
+{
+  "name": "greencoat",
+  "version": "0.0.0",
+  "authors": [
+    "Suguru Namura <snamura@gmail.com>"
+  ],
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "pure": "~0.4.2",
+    "jquery": "~2.1.0",
+    "codemirror": "~4.0.3",
+    "gl-matrix": "~2.2.1"
+  },
+  "overrides": {
+    "pure": {
+      "main": [
+        "pure.css"
+      ]
+    },
+    "jquery": {
+      "main": [
+        "dist/jquery.js"
+      ]
+    }
+  }
+}
