@@ -347,7 +347,6 @@ $(function() {
       var halfHeight = Math.floor(height / 2);
       vertexEditor.setSize('100%', (halfHeight - 15) + 'px');
       fragmentEditor.setSize('100%', (halfHeight - 15) + 'px');
-      console.log(height, halfWidth);
       $('#logs').height((height - Math.min(512, halfWidth) - 42) + 'px');
     };
   })(window);
