@@ -30,8 +30,13 @@ $(function() {
       'attribute vec2 a_texCoord;\n' +
       'attribute vec4 a_color;\n' +
       '\n' +
+      '#ifdef GL_ES\n' +
       'varying lowp vec4 v_fragmentColor;\n' +
       'varying mediump vec2 v_texCoord;\n' +
+      '#else\n' +
+      'varying vec4 v_fragmentColor;\n' +
+      'varying vec2 v_texCoord;\n' +
+      '#endif\n' +
       '\n' +
       'void main() {\n' +
       '  gl_Position = CC_PMatrix * a_position;\n' +
@@ -50,13 +55,15 @@ $(function() {
     lineNumbers: true,
     mode: 'x-shader/x-fragment',
     value:
-      'varying lowp vec4 v_fragmentColor;\n' +
-      'varying lowp vec2 v_texCoord;\n' +
+      '#ifdef GL_ES\n' +
+      'precision mediump float;\n' +
+      '#endif\n' +
+      '\n' +
+      'varying vec4 v_fragmentColor;\n' +
+      'varying vec2 v_texCoord;\n' +
       'uniform sampler2D CC_Texture0;\n' +
       '\n' +
       'void main(void) {\n' +
-      //'  gl_FragColor = vec4(0.9,0.8,1,1);\n' +
-      //'  gl_FragColor = v_fragmentColor;\n' +
       '  gl_FragColor = texture2D(CC_Texture0, v_texCoord);\n' +
       '}'
   });
@@ -78,6 +85,7 @@ $(function() {
   var compileShader = function(source, type) {
     var shader;
     var editor;
+
     // basic heade
     source = [
       'precision mediump float;',
@@ -178,7 +186,6 @@ $(function() {
     attrs.a_position = gl.getAttribLocation(shaderProgram, 'a_position');
     attrs.a_texCoord = gl.getAttribLocation(shaderProgram, 'a_texCoord');
     attrs.a_color = gl.getAttribLocation(shaderProgram, 'a_color');
-
     uniforms = {};
     uniforms.CC_PMatrix = gl.getUniformLocation(shaderProgram, 'CC_PMatrix');
     uniforms.CC_MVMatrix = gl.getUniformLocation(shaderProgram, 'CC_MVMatrix');
@@ -188,6 +195,10 @@ $(function() {
     uniforms.CC_SinTime = gl.getUniformLocation(shaderProgram, 'CC_SinTime');
     uniforms.CC_CosTime = gl.getUniformLocation(shaderProgram, 'CC_CosTime');
     uniforms.CC_Random01 = gl.getUniformLocation(shaderProgram, 'CC_Random01');
+
+    uniforms.resolution = gl.getUniformLocation(shaderProgram, 'resolution');
+    uniforms.center = gl.getUniformLocation(shaderProgram, 'center');
+
   };
 
   var loadTexture = function(url) {
@@ -267,19 +278,70 @@ $(function() {
   mat4.multiply(mvpMatrix, mMatrix, mvpMatrix);
 
   var setAttributes = function() {
-    gl.bindBuffer(gl.ARRAY_BUFFER, texCoords);
-    gl.enableVertexAttribArray(attrs.a_texCoord);
-    gl.vertexAttribPointer(attrs.a_texCoord, 2, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, position);
-    gl.enableVertexAttribArray(attrs.a_position);
-    gl.vertexAttribPointer(attrs.a_position, 3, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, color);
-    gl.enableVertexAttribArray(attrs.a_color);
-    gl.vertexAttribPointer(attrs.a_color, 4, gl.FLOAT, false, 0, 0);
-
+    
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index);
+
+    if (!attrs) {
+      return;
+    }
+
+    if (attrs.a_texCoord !== -1) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, texCoords);
+      gl.enableVertexAttribArray(attrs.a_texCoord);
+      gl.vertexAttribPointer(attrs.a_texCoord, 2, gl.FLOAT, false, 0, 0);
+    }
+
+    if (attrs.a_position !== -1) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, position);
+      gl.enableVertexAttribArray(attrs.a_position);
+      gl.vertexAttribPointer(attrs.a_position, 3, gl.FLOAT, false, 0, 0);
+    }
+
+    if (attrs.a_color !== -1) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, color);
+      gl.enableVertexAttribArray(attrs.a_color);
+      gl.vertexAttribPointer(attrs.a_color, 4, gl.FLOAT, false, 0, 0);
+    }
+  };
+
+  var setUniforms = function() {
+
+    if (!uniforms) {
+      return;
+    }
+
+    if (uniforms.CC_Texture0) {
+      gl.uniform1i(uniforms.CC_Texture0, 0);
+    }
+    if (uniforms.CC_PMatrix) {
+      gl.uniformMatrix4fv(uniforms.CC_PMatrix, false, pMatrix);
+    }
+    if (uniforms.CC_MVMatrix) {
+      gl.uniformMatrix4fv(uniforms.CC_MVMatrix, false, mvMatrix);
+    }
+    if (uniforms.CC_MVPMatrix) {
+      gl.uniformMatrix4fv(uniforms.CC_MVPMatrix, false, mvpMatrix);
+    }
+
+    if (uniforms.CC_Time) {
+      gl.uniform4fv(uniforms.CC_Time, [time/10, time, time*2, time*4]);
+    }
+    if (uniforms.CC_SinTime) {
+      gl.uniform4fv(uniforms.CC_SinTime, [time/8, time/4, time/2, Math.sin(time)]);
+    }
+    if (uniforms.CC_CosTime) {
+      gl.uniform4fv(uniforms.CC_CosTime, [time/8, time/4, time/2, Math.cos(time)]);
+    }
+    if (uniforms.CC_Random01) {
+      gl.uniform4fv(uniforms.CC_Random01, [Math.random(), Math.random(), Math.random(), Math.random()]);
+    }
+
+    if (uniforms.resolution) {
+      gl.uniform2fv(uniforms.resolution, [canvas.width, canvas.height]);
+    }
+    if (uniforms.center) {
+      gl.uniform2fv(uniforms.center, [canvas.width/2, canvas.height/2]);
+    }
   };
 
   var draw = function() {
@@ -288,19 +350,10 @@ $(function() {
     gl.clearDepth(1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    gl.uniform1i(uniforms.CC_Texture0, 0);
-
-    gl.uniformMatrix4fv(uniforms.CC_PMatrix, false, pMatrix);
-    gl.uniformMatrix4fv(uniforms.CC_MVMatrix, false, mvMatrix);
-    gl.uniformMatrix4fv(uniforms.CC_MVPMatrix, false, mvpMatrix);
-
-    gl.uniform4fv(uniforms.CC_Time, [time/10, time, time*2, time*4]);
-    gl.uniform4fv(uniforms.CC_SinTime, [time/8, time/4, time/2, Math.sin(time)]);
-    gl.uniform4fv(uniforms.CC_CosTime, [time/8, time/4, time/2, Math.cos(time)]);
-    gl.uniform4fv(uniforms.CC_Random01, [Math.random(), Math.random(), Math.random(), Math.random()]);
+    setUniforms();
 
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, index);
-    //gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
     gl.flush();
   };
 
@@ -346,13 +399,19 @@ $(function() {
   var resize = (function(win) {
     win = $(win);
     return function() {
+
       var width = win.width();
       var height = win.height();
-      var halfWidth = Math.floor(width / 2);
       var halfHeight = Math.floor(height / 2);
+
+      var editorWidth = $('#editor-view').width();
+      var parameterWidth = $('#parameter-view').width();
+
+      var previewHeight = $('#gl-view').height();
+
       vertexEditor.setSize('100%', (halfHeight - 15) + 'px');
       fragmentEditor.setSize('100%', (halfHeight - 15) + 'px');
-      $('#logs').height((height - Math.min(512, halfWidth) - 42) + 'px');
+      $('#logs').height((height - previewHeight - 15) + 'px');
     };
   })(window);
 

@@ -8,14 +8,15 @@ html(lang='en')
     script(type='text/javascript' src='/js/main.js')
   body
     .pure-g
-      .pure-u-1-2
-        #vertex-area
-          h5 Vertex Shader
-          #vertex-editor
-        #fragment-area
-          h5 Fragment Shader
-          #fragment-editor
-      .pure-u-1-2
+      .pure-u-5-12
+        #editor-view
+          #vertex-area
+            h5 Vertex Shader
+            #vertex-editor
+          #fragment-area
+            h5 Fragment Shader
+            #fragment-editor
+      .pure-u-5-12
         #gl-view
           h5 Preview
           #preview
@@ -23,3 +24,6 @@ html(lang='en')
         #log-view
           h5 Log
           #logs
+      .pure-u-1-6
+        #param-view
+          h5 Parameters
