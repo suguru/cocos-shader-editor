@@ -5,10 +5,12 @@ html(lang='en')
     link(rel='stylesheet' type='text/css' href='/css/components.css')
     link(rel='stylesheet' type='text/css' href='/css/main.css')
     script(type='text/javascript' src='/js/components.js')
+    script(type='text/javascript' src='/js/editors.js')
+    script(type='text/javascript' src='/js/webgl.js')
     script(type='text/javascript' src='/js/main.js')
   body
     .pure-g
-      .pure-u-5-12
+      .pure-u-1-2
         #editor-view
           #vertex-area
             h5 Vertex Shader
@@ -16,14 +18,18 @@ html(lang='en')
           #fragment-area
             h5 Fragment Shader
             #fragment-editor
-      .pure-u-5-12
+      .pure-u-1-2
         #gl-view
           h5 Preview
           #preview
             canvas#gl(width='512' height='512')
-        #log-view
-          h5 Log
-          #logs
-      .pure-u-1-6
-        #param-view
-          h5 Parameters
+        #panel-view
+          .pure-menu.pure-menu-open.pure-menu-horizontal
+            ul
+              li#menu-params
+                a(href='#' onclick='selectPanel("params")') Parameters
+              li#menu-logs
+                a(href='#' onclick='selectPanel("logs")') Logs
+          #panel-content
+            #logs
+            #params
