@@ -26,10 +26,49 @@ html(lang='en')
         #panel-view
           .pure-menu.pure-menu-open.pure-menu-horizontal
             ul
-              li#menu-params
-                a(href='#' onclick='selectPanel("params")') Parameters
+              li#menu-uniforms
+                a(href='#' onclick='selectPanel("uniforms")') Uniforms
+              li#menu-attributes
+                a(href='#' onclick='selectPanel("attributes")') Attributes
               li#menu-logs
                 a(href='#' onclick='selectPanel("logs")') Logs
           #panel-content
             #logs
-            #params
+            #uniforms
+              form.pure-form.pure-form-aligned
+                .form-control#control-resolution
+                  .pure-u-1-4
+                    label resolution
+                  .pure-u-3-4
+                    input.pure-input-1-4#uniform-resolution-x(type='text' value='512')
+                    input.pure-input-1-4#uniform-resolution-y(type='text' value='512')
+                    input.pure-input-1-4#uniform-resolution-y(type='text' value='512')
+                    input.pure-input-1-4#uniform-resolution-y(type='text' value='512')
+                .form-control#control-center
+                  .pure-u-1-4
+                    label center
+                  .pure-u-3-4
+                    input.pure-input-1-4#uniform-center-x(type='text' value='256')
+                    input.pure-input-1-4#uniform-center-y(type='text' value='256')
+            #attributes
+              form.pure-form.pure-form-aligned
+                .form-control#control-a_color
+                  .pure-u-1-4
+                    label a_color
+                  .pure-u-3-4
+                    input.pure-input-1-4#uniform-a_color-x(type='text' value='1.0')
+                    input.pure-input-1-4#uniform-a_color-x(type='text' value='0.0')
+                    input.pure-input-1-4#uniform-a_color-x(type='text' value='0.0')
+                    input.pure-input-1-4#uniform-a_color-x(type='text' value='1.0')
+                    input.pure-input-1-4#uniform-a_color-x(type='text' value='0.0')
+                    input.pure-input-1-4#uniform-a_color-x(type='text' value='1.0')
+                    input.pure-input-1-4#uniform-a_color-x(type='text' value='0.0')
+                    input.pure-input-1-4#uniform-a_color-x(type='text' value='1.0')
+                    input.pure-input-1-4#uniform-a_color-x(type='text' value='0.0')
+                    input.pure-input-1-4#uniform-a_color-x(type='text' value='0.0')
+                    input.pure-input-1-4#uniform-a_color-x(type='text' value='1.0')
+                    input.pure-input-1-4#uniform-a_color-x(type='text' value='1.0')
+                    input.pure-input-1-4#uniform-a_color-x(type='text' value='1.0')
+                    input.pure-input-1-4#uniform-a_color-x(type='text' value='1.0')
+                    input.pure-input-1-4#uniform-a_color-x(type='text' value='1.0')
+                    input.pure-input-1-4#uniform-a_color-x(type='text' value='1.0')

@@ -55,6 +55,6 @@ $(function() {
 
   $(g).on('resize', resize);
   resize();
-  g.selectPanel('params');
+  g.selectPanel('uniforms');
 
 });

@@ -1,4 +1,4 @@
-/* global mat4 */
+/* global mat4,log */
 ;(function(global) {
 
   var canvas;
@@ -60,58 +60,24 @@
 
     if (type === 'shader-vs') {
       shader = gl.createShader(gl.VERTEX_SHADER);
-      editor = editors.vertex;
     } else if (type === 'shader-fs') {
       shader = gl.createShader(gl.FRAGMENT_SHADER);
-      editor = editors.fragment;
     }
 
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
 
-    // clear error
-    if (editor.__errors) {
-      editor.__errors.forEach(function(err) {
-        editor.removeLineClass(err.line, err.where, err.class);
-      });
-    }
-    if (editor.__widgets) {
-      editor.__widgets.forEach(function(widget) {
-        widget.clear();
-      });
-    }
+    editors.clearError(type);
 
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-
       var shaderLog = gl.getShaderInfoLog(shader);
       if (shaderLog) {
-        // init error array
-        editor.__errors = [];
-        editor.__widgets = [];
         // parsing error mesage
         var pattern = /ERROR:\s[0-9]+:([0-9]+):(.*)/;
         shaderLog.split('\n').forEach(function(log) {
           var match = pattern.exec(log);
           if (match) {
-            var line = Number(match[1]) - 10;
-            var text = match[2];
-
-            var elm = document.createElement('div');
-            var icon = document.createElement('span');
-            icon.innerHTML = '!';
-            icon.className = 'error-icon';
-
-            var msg = document.createElement('span');
-            msg.appendChild(document.createTextNode(text));
-            msg.className = 'error-message';
-
-            elm.appendChild(icon);
-            elm.appendChild(msg);
-            elm.className = 'error-line';
-
-            editor.__widgets.push(editor.addLineWidget(line, elm, { coverGutter: false, noHScroll: true }));
-            editor.__errors.push({ line: line, where: 'background', class: 'line-error' });
-            editor.addLineClass(line, 'background', 'line-error');
+            editors.addError(type, Number(match[1])-10, match[2]);
           }
         });
         return null;
@@ -249,8 +215,6 @@
     gl.clearDepth(1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    setUniforms();
-
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, index);
 
     gl.flush();
@@ -269,9 +233,9 @@
     if (!position) {
       position = createVBO([
         1.0,  1.0, 0.0,
-        -1.0,  1.0, 0.0,
+       -1.0,  1.0, 0.0,
         1.0, -1.0, 0.0,
-        -1.0, -1.0, 0.0
+       -1.0, -1.0, 0.0
       ]);
       color = createVBO([
         1, 0, 0, 1,
@@ -308,7 +272,7 @@
     // set view port
     gl.viewport(0, 0, canvas.width, canvas.height);
 
-    gl.enable(gl.DEPTH_TEST);
+    // gl.enable(gl.DEPTH_TEST);
     gl.activeTexture(gl.TEXTURE0);
 
     // Load default texture imamge
@@ -318,6 +282,8 @@
 
     initShaders();
     setAttributes();
+    setUniforms();
+
     step();
   };
 
@@ -332,9 +298,11 @@
     }, 500);
   };
 
+  var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+
   var step = function() {
     draw();
-    window.requestAnimationFrame(step);
+    requestAnimationFrame(step);
     totalFrame++;
   };
 

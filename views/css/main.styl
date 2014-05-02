@@ -22,26 +22,47 @@ h5
   .pure-menu
     font-size 12px
 
+#panel-content
+  overflow scroll
+  padding-top 4px
+
 #logs
   padding 0 0 0 5px
   font-size 10px
   font-family: 'Source Code Pro','Andale Mono','Courier',monospace
   overflow scroll
 
+.pure-form
+  font-size 75%
+  input[type=text]
+    padding 2px 4px
+    width 24%
+    margin 0 1% 2px 0
+  label
+    display block
+    vertical-align middle
+    line-height 24px
+    margin 0 8px 0 0
+    text-align right
+  .form-control
+    margin-bottom 4px
+
 .CodeMirror-code
   font-family 'Source Code Pro','Andale Mono','Courier',monospace
   font-size 11px
 
-.line-error
-  background #400 !important
+.errors
+  width 10px
 
-.error-icon
-  border-top-left-radius 8px
-  border-bottom-left-radius 8px
-  padding 1px 4px 0 6px
-  font-weight bold
+.error-mark
+  width 10px
+  border-radius 5px
   background #c00
-  color #eee
+  text-align center
+  font-weight bold
+
+.line-error
+  background #500 !important
 
 .error-line
   font-size 10px
@@ -49,8 +70,7 @@ h5
   padding 2px 8px
 
 .error-message
-  border-top-right-radius 8px
-  border-bottom-right-radius 8px
+  border-radius 8px
   display inline-block
   color #622
   background #fff5cc
