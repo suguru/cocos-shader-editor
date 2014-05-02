@@ -31,6 +31,7 @@ gulp.task('components', function() {
 
   // Copy and uglify component javascripts
   gulp.src([
+    './bower_components/lodash/dist/lodash.js',
     './bower_components/jquery/dist/jquery.js',
     './bower_components/gl-matrix/dist/gl-matrix.js',
     './bower_components/codemirror/lib/codemirror.js',

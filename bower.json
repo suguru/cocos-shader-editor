@@ -19,7 +19,8 @@
     "pure": "~0.4.2",
     "jquery": "~2.1.0",
     "codemirror": "~4.0.3",
-    "gl-matrix": "~2.2.1"
+    "gl-matrix": "~2.2.1",
+    "lodash": "~2.4.1"
   },
   "overrides": {
     "pure": {
