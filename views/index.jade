@@ -10,6 +10,15 @@ html(lang='en')
     script(type='text/javascript' src='/js/webgl.js')
     script(type='text/javascript' src='/js/main.js')
   body
+    header
+      .pure-menu.pure-menu-open.pure-menu-horizontal
+        ul
+          li
+            a(href='/') Home
+          //li
+          //  a(href='#') Save
+          //li
+          //  a(href='#') Save as
     .pure-g
       .pure-u-1-2
         #editor-view
@@ -28,14 +37,17 @@ html(lang='en')
           .pure-menu.pure-menu-open.pure-menu-horizontal
             ul
               li#menu-uniforms
-                a(href='#' onclick='selectPanel("uniforms")') Uniforms
+                a(href='#' onclick='return selectPanel("uniforms")') Uniforms
               li#menu-attributes
-                a(href='#' onclick='selectPanel("attributes")') Attributes
+                a(href='#' onclick='return selectPanel("attributes")') Attributes
+              li#menu-textures
+                a(href='#' onclick='return selectPanel("textures")') Textures
               li#menu-logs
-                a(href='#' onclick='selectPanel("logs")') Logs
+                a(href='#' onclick='return selectPanel("logs")') Logs
           #panel-content
-            #logs
             #uniforms
               form.pure-form.pure-form-aligned
             #attributes
               form.pure-form.pure-form-aligned
+            #textures
+            #logs

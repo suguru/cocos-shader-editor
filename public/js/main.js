@@ -32,7 +32,10 @@ $(function() {
     return function() {
 
       var height = win.height();
-      var halfHeight = Math.floor(height / 2);
+      var headerHeight = $('header').height();
+      var canvasHeight = $('canvas').height();
+
+      var halfHeight = Math.floor((height - headerHeight) / 2);
 
       var previewHeight = $('#gl-view').height();
       var h5Height = $('#vertex-area > h5').height();
@@ -41,7 +44,8 @@ $(function() {
       editors.vertex.setSize('100%', (halfHeight - h5Height) + 'px');
       editors.fragment.setSize('100%', (halfHeight - h5Height) + 'px');
 
-      $('#panel-content').height((height - previewHeight - menuHeight) + 'px');
+      $('#panel-content').height((height - previewHeight - menuHeight - headerHeight) + 'px');
+      $('#preview').height(canvasHeight);
     };
   })(g);
 
@@ -51,6 +55,7 @@ $(function() {
     $('#panel-content > div').hide();
     $('#menu-'+name).addClass('pure-menu-selected');
     $('#'+name).show();
+    return false;
   };
 
   $(g).on('resize', resize);
